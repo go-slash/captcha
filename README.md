@@ -3,7 +3,7 @@ Package captcha
 
 **:warning: Warning: this captcha can be broken by advanced OCR captcha breaking algorithms.**
 
-	import "github.com/dchest/captcha"
+	import "github.com/go-slash/captcha"
 
 Package captcha implements generation and verification of image and audio
 CAPTCHAs.
@@ -32,28 +32,26 @@ Developers can also provide custom store (for example, which saves captcha
 ids and solutions in database) by implementing Store interface and
 registering the object with SetCustomStore.
 
-Captchas are created by calling New, which returns the captcha id.  Their
+Captchas are created by calling New, which returns the captcha id. Their
 representations, though, are created on-the-fly by calling WriteImage or
 WriteAudio functions. Created representations are not stored anywhere, but
 subsequent calls to these functions with the same id will write the same
 captcha solution. Reload function will create a new different solution for the
 provided captcha, allowing users to "reload" captcha if they can't solve the
-displayed one without reloading the whole page.  Verify and VerifyString are
+displayed one without reloading the whole page. Verify and VerifyString are
 used to verify that the given solution is the right one for the given captcha
 id.
 
 Server provides an http.Handler which can serve image and audio
 representations of captchas automatically from the URL. It can also be used
-to reload captchas.  Refer to Server function documentation for details, or
+to reload captchas. Refer to Server function documentation for details, or
 take a look at the example in "capexample" subdirectory.
 
+## Examples
 
-Examples
---------
+![Image](https://github.com/go-slash/captcha/raw/master/capgen/example.png)
 
-![Image](https://github.com/dchest/captcha/raw/master/capgen/example.png)
-
-[Audio](https://github.com/dchest/captcha/raw/master/capgen/example.wav)
+[Audio](https://github.com/go-slash/captcha/raw/master/capgen/example.wav)
 
 
 Constants
@@ -89,10 +87,7 @@ var (
 )
 ```
 
-
-
-Functions
----------
+## Functions
 
 ### func New
 
@@ -270,8 +265,14 @@ method after the certain amount of captchas has been stored.)
 
 ### func NewMemoryStore
 
-	func NewMemoryStore(collectNum int, expiration time.Duration) Store
-	
-NewMemoryStore returns a new standard memory store for captchas with the
-given collection threshold and expiration time in seconds. The returned
+    func NewMemoryStore(collectNum int, expiration time.Duration) Store
+
+NewMemoryStore returns a new standard memory store for captchas. The returned
+store must be registered with SetCustomStore to replace the default one.
+
+### func NewRedisStore
+
+    func NewRedisStore(opts *redis.Options, expiration time.Duration, out Logger, prefix ...string) Store
+
+NewRedisStore returns a new standard redis store for captchas. The returned
 store must be registered with SetCustomStore to replace the default one.

@@ -7,11 +7,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/dchest/captcha"
 	"io"
 	"log"
 	"net/http"
 	"text/template"
+
+	"github.com/go-slash/captcha"
 )
 
 var formTemplate = template.Must(template.New("example").Parse(formTemplateSrc))
